@@ -3,28 +3,20 @@
 
 const exhibitors = [
     {
-        street: "Musterstraße",
-        number: "12",
-        name: "Familie Schmidt",
-        description: "Spielzeug, Kleidung, Bücher",
-        lat: 51.1657,
-        lng: 10.4515
-    },
-    {
-        street: "Beispielweg",
-        number: "8a",
-        name: "Anna und Tom",
-        description: "Antiquitäten, Möbel",
-        lat: 51.1667,
-        lng: 10.4530
+        street: "Rodauerstraße",
+        number: "2",
+        name: "Volker Nickel",
+        description: "",
+        lat: 49.736116,
+        lng: 8.575081
     },
     {
         street: "Im Ritterbruch",
         number: "9",
         name: "Gertrud",
-        description: "Antiquitäten, Möbel",
-        lat: 49.735962,
-        lng: 8.567226
+        description: "Mode",
+        lat: 49.735880,
+        lng: 8.567029
     }
     // Weitere Einträge hier ergänzen ...
 ];
