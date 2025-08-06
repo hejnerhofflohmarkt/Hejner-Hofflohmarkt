@@ -4,16 +4,16 @@
 const exhibitors = [
     {
         street: "Rodauerstraße",
-        number: "2",
-        name: "Volker Nickel",
+        number: "...",
+        name: "...",
         description: "",
         lat: 49.736116,
         lng: 8.575081
     },
     {
         street: "Im Ritterbruch",
-        number: "9",
-        name: "Gertrud",
+        number: "...",
+        name: "...",
         description: "Mode",
         lat: 49.735880,
         lng: 8.567029
