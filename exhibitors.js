@@ -14,7 +14,7 @@ const exhibitors = [
         street: "Im Ritterbruch",
         number: "...",
         name: "...",
-        description: "Mode",
+        description: "Mode, etc.",
         lat: 49.735880,
         lng: 8.567029
     }
