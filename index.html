@@ -59,8 +59,8 @@
     <table>
         <thead>
             <tr>
-                <th>Nr.</th>
-                <th>Straße und Hausnummer</th>
+                <th>Lfd. Nr.</th>
+                <th>Straße & Hausnummer</th>
                 <th>Name</th>
                 <th>Beschreibung</th>
             </tr>
@@ -138,7 +138,7 @@ exhibitorsScript.onload = function() {
     const tableBody = document.getElementById('exhibitor-table');
     const markerRefs = [];
     // Karte initialisieren
-    const map = L.map('map').setView([49.73685,8.57275], 16);
+    const map = L.map('map').setView([49.73685,8.57275], 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
