@@ -3,7 +3,7 @@
 
 const exhibitors = [
     {
-        street: "Musterstraße--",
+        street: "Musterstraße",
         number: "12",
         name: "Familie Schmidt",
         description: "Spielzeug, Kleidung, Bücher",
@@ -17,6 +17,14 @@ const exhibitors = [
         description: "Antiquitäten, Möbel",
         lat: 51.1667,
         lng: 10.4530
+    },
+    {
+        street: "Im Ritterbruch",
+        number: "9",
+        name: "Gertrud",
+        description: "Antiquitäten, Möbel",
+        lat: 49.735962,
+        lng: 8.567226
     }
     // Weitere Einträge hier ergänzen ...
 ];
