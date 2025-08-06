@@ -34,6 +34,11 @@
             color: #333;
             margin-bottom: 10px;
         }
+        /* Hervorhebung der Tabellenzeile */
+        .highlight-row {
+            background: #e0f7fa !important;
+            transition: background 0.3s;
+        }
     </style>
 </head>
 <body>
@@ -43,6 +48,7 @@
         <button class="bookmark-btn" onclick="addBookmark()">Seite zu meinen ⭐Favoriten hinzufügen</button>
     </div>
     <div id="map"></div>
+    <!-- Modal für Navigation -->
     <div id="nav-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:2000; align-items:center; justify-content:center;">
       <div style="background:#fff; padding:30px; border-radius:12px; max-width:350px; margin:auto; box-shadow:0 4px 24px rgba(0,0,0,0.2); text-align:center;">
         <h2 style="margin-top:0;">Mit welcher App möchtest du navigieren?</h2>
@@ -103,8 +109,6 @@ function startGoogleMaps() {
 
 // Bookmark-Funktion
 function addBookmark() {
-  const title = document.title;
-  const url = window.location.href;
   const isMac = navigator.platform.toUpperCase().includes('MAC');
   const shortcut = isMac ? 'Cmd + D' : 'Strg + D';
   alert(
@@ -115,36 +119,61 @@ function addBookmark() {
   );
 }
 
-// Dynamisches Laden und Initialisierung
+// Bidirektionale Verlinkung Marker <-> Liste
+function highlightRow(idx) {
+    document.querySelectorAll('#exhibitor-table tr').forEach(tr => tr.classList.remove('highlight-row'));
+    const row = document.getElementById('exhibitor-row-' + idx);
+    if(row) row.classList.add('highlight-row');
+}
+
+</script>
+
+<!-- Aussteller-Daten dynamisch und Initialisierung -->
+<script>
 const exhibitorsScript = document.createElement('script');
 exhibitorsScript.src = 'exhibitors.js?v=' + Date.now();
 document.head.appendChild(exhibitorsScript);
 exhibitorsScript.onload = function() {
-    // Tabelle befüllen
+    // Tabelle und Karte
     const tableBody = document.getElementById('exhibitor-table');
-    exhibitors.forEach((ex, i) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `<td>${i + 1}</td>
-                         <td>${ex.street} ${ex.number}</td>
-                         <td>${ex.name}</td>
-                         <td>${ex.description}</td>`;
-        tableBody.appendChild(row);
-    });
+    const markerRefs = [];
     // Karte initialisieren
     const map = L.map('map').setView([49.73685,8.57275], 16);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
     }).addTo(map);
-    exhibitors.forEach(ex => {
-        // Adresse als anklickbarer Link mit Modal für Navigation!
+
+    exhibitors.forEach((ex, i) => {
+        // Tabellenzeile mit Click für Karte
+        const row = document.createElement('tr');
+        row.id = 'exhibitor-row-' + i;
+        row.style.cursor = "pointer";
+        row.onclick = function() {
+            markerRefs[i].openPopup();
+            map.panTo([ex.lat, ex.lng]);
+            highlightRow(i);
+        };
+        row.innerHTML = `<td>${i + 1}</td>
+                         <td>${ex.street} ${ex.number}</td>
+                         <td>${ex.name}</td>
+                         <td>${ex.description}</td>`;
+        tableBody.appendChild(row);
+
+        // Marker mit Click für Tabelle
         const popupHtml = `<strong>${ex.name}</strong><br>
             <a href="#" onclick="openNavModal(${ex.lat},${ex.lng},'${ex.street} ${ex.number}'); return false;" style="color:#36c3e7; text-decoration:underline; font-weight:bold;">
               ${ex.street} ${ex.number}
             </a><br>
             ${ex.description}`;
-        L.marker([ex.lat, ex.lng]).addTo(map)
+        const marker = L.marker([ex.lat, ex.lng]).addTo(map)
             .bindPopup(popupHtml);
+        markerRefs.push(marker);
+
+        marker.on('click', function() {
+            highlightRow(i);
+            document.getElementById('exhibitor-row-' + i).scrollIntoView({behavior: "smooth", block: "center"});
+        });
     });
 };
 </script>
