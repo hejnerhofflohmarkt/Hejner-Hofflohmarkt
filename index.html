@@ -2,11 +2,8 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Hejner Hofflohmarkt 2025</title>
+    <title>Hofflohmarkt – Aussteller</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <style>
@@ -17,11 +14,38 @@
         th { background: #f4f4f4; }
         .container { max-width: 1000px; margin: auto; }
         h1 { text-align: center; }
+        .bookmark-section { text-align: center; margin: 30px 0 20px 0; }
+        .bookmark-btn {
+            background: linear-gradient(90deg, #5be7a9, #36c3e7);
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 15px 32px;
+            font-size: 1.15em;
+            cursor: pointer;
+            box-shadow: 0 2px 12px 0 rgba(36, 198, 220, 0.12);
+            transition: background 0.3s;
+        }
+        .bookmark-btn:hover {
+            background: linear-gradient(90deg, #36c3e7, #5be7a9);
+        }
+        .bookmark-hint {
+            font-size: 1.08em;
+            color: #333;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Hejner Hofflohmarkt 2025</h1>
+    <h1>Hofflohmarkt – Aussteller</h1>
+    <div class="bookmark-section">
+        <div class="bookmark-hint">
+            ⭐ Möchtest du diese Seite schnell wiederfinden?<br>
+            Füge sie mit einem Klick zu deinen Favoriten/Bookmarks hinzu!
+        </div>
+        <button class="bookmark-btn" onclick="addBookmark()">Seite zu meinen Favoriten hinzufügen</button>
+    </div>
     <div id="map"></div>
     <table>
         <thead>
@@ -40,13 +64,14 @@
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    
 <!-- Aussteller-Daten -->
+<!-- <script src="exhibitors.js"></script> -->
 <script>
   const script = document.createElement('script');
   script.src = 'exhibitors.js?v=' + Date.now();
   document.head.appendChild(script);
 </script>
+    
 <script>
 // Tabelle befüllen mit fortlaufender Nummer
 const tableBody = document.getElementById('exhibitor-table');
@@ -60,7 +85,7 @@ exhibitors.forEach((ex, i) => {
 });
 
 // Karte initialisieren
-const map = L.map('map').setView([49.73663, 8.57384], 16); // Mittelpunkt und Zoom anpassen
+const map = L.map('map').setView([51.1657, 10.4515], 15); // Mittelpunkt und Zoom anpassen
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '© OpenStreetMap'
@@ -71,6 +96,28 @@ exhibitors.forEach(ex => {
     L.marker([ex.lat, ex.lng]).addTo(map)
         .bindPopup(`<strong>${ex.name}</strong><br>${ex.street} ${ex.number}<br>${ex.description}`);
 });
+
+// Bookmark-Funktion
+function addBookmark() {
+    const title = document.title;
+    const url = window.location.href;
+
+    // Für verschiedene Browser
+    if (window.sidebar && window.sidebar.addPanel) { // Firefox <23
+        window.sidebar.addPanel(title, url, "");
+    } else if (window.external && ('AddFavorite' in window.external)) { // IE
+        window.external.AddFavorite(url, title);
+    } else if (window.opera && window.print) { // Opera
+        this.title = title;
+        return true;
+    } else {
+        alert(
+            "Du kannst diese Seite als Favorit hinzufügen, indem du auf das Sternsymbol oder das Menü im Browser klickst.\n\n" +
+            "Oder drücke einfach:\n" +
+            "Strg+D (Windows) bzw. Cmd+D (Mac)"
+        );
+    }
+}
 </script>
 </body>
 </html>
