@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Hofflohmarkt – Aussteller</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #map { height: 500px; margin-bottom: 30px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px; border: 1px solid #ddd; }
+        th { background: #f4f4f4; }
+        .container { max-width: 1000px; margin: auto; }
+        h1 { text-align: center; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Hofflohmarkt – Aussteller</h1>
+    <div id="map"></div>
+    <table>
+        <thead>
+            <tr>
+                <th>Straße und Hausnummer</th>
+                <th>Name</th>
+                <th>Beschreibung</th>
+            </tr>
+        </thead>
+        <tbody id="exhibitor-table">
+            <!-- Dynamisch gefüllt -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<!-- Aussteller-Daten -->
+<script src="exhibitors.js"></script>
+<script>
+// Tabelle befüllen
+const tableBody = document.getElementById('exhibitor-table');
+exhibitors.forEach(ex => {
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${ex.street} ${ex.number}</td>
+                     <td>${ex.name}</td>
+                     <td>${ex.description}</td>`;
+    tableBody.appendChild(row);
+});
+
+// Karte initialisieren
+const map = L.map('map').setView([51.1657, 10.4515], 15); // Mittelpunkt und Zoom anpassen
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+// Marker für alle Aussteller hinzufügen
+exhibitors.forEach(ex => {
+    L.marker([ex.lat, ex.lng]).addTo(map)
+        .bindPopup(`<strong>${ex.name}</strong><br>${ex.street} ${ex.number}<br>${ex.description}`);
+});
+</script>
+</body>
+</html>
