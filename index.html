@@ -93,24 +93,17 @@ exhibitors.forEach(ex => {
 
 // Bookmark-Funktion
 function addBookmark() {
-    const title = document.title;
-    const url = window.location.href;
+  const title = document.title;
+  const url = window.location.href;
+  const isMac = navigator.platform.toUpperCase().includes('MAC');
+  const shortcut = isMac ? 'Cmd + D' : 'Strg + D';
 
-    // Für verschiedene Browser
-    if (window.sidebar && window.sidebar.addPanel) { // Firefox <23
-        window.sidebar.addPanel(title, url, "");
-    } else if (window.external && ('AddFavorite' in window.external)) { // IE
-        window.external.AddFavorite(url, title);
-    } else if (window.opera && window.print) { // Opera
-        this.title = title;
-        return true;
-    } else {
-        alert(
-            "Du kannst diese Seite als Favorit hinzufügen, indem du auf das Sternsymbol oder das Menü im Browser klickst.\n\n" +
-            "Oder drücke einfach:\n" +
-            "Strg+D (Windows) bzw. Cmd+D (Mac)"
-        );
-    }
+  alert(
+    `📌 Um diese Seite als Lesezeichen zu speichern:\n\n` +
+    `• Drücke ${shortcut}\n` +
+    `• Oder klicke auf das Sternsymbol im Browser\n\n` +
+    `Titel: ${title}\nURL: ${url}`
+  );
 }
 </script>
 </body>
