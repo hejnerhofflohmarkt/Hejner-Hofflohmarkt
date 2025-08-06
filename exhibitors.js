@@ -3,7 +3,7 @@
 
 const exhibitors = [
     {
-        street: "Musterstraße",
+        street: "Musterstraße--",
         number: "12",
         name: "Familie Schmidt",
         description: "Spielzeug, Kleidung, Bücher",
