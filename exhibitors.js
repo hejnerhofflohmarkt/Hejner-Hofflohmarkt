@@ -5,7 +5,7 @@ const exhibitors = [
     {
         street: "Rodauerstraße",
         number: "...",
-        name: "...",
+        name: "Familie Test",
         description: "",
         lat: 49.736116,
         lng: 8.575081
@@ -13,7 +13,7 @@ const exhibitors = [
     {
         street: "Im Ritterbruch",
         number: "...",
-        name: "...",
+        name: "Pipi Langstrumpf",
         description: "Mode, etc.",
         lat: 49.735880,
         lng: 8.567029
