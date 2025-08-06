@@ -43,54 +43,13 @@
         <button class="bookmark-btn" onclick="addBookmark()">Seite zu meinen ⭐Favoriten hinzufügen</button>
     </div>
     <div id="map"></div>
-        <div id="nav-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:2000; align-items:center; justify-content:center;">
+    <div id="nav-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:2000; align-items:center; justify-content:center;">
       <div style="background:#fff; padding:30px; border-radius:12px; max-width:350px; margin:auto; box-shadow:0 4px 24px rgba(0,0,0,0.2); text-align:center;">
         <h2 style="margin-top:0;">Mit welcher App möchtest du navigieren?</h2>
         <div id="nav-choices"></div>
         <button onclick="closeNavModal()" style="margin-top:18px; background:#36c3e7; color:#fff; border:none; border-radius:8px; padding:8px 16px; cursor:pointer;">Abbrechen</button>
       </div>
     </div>
-<script>
-let navLat = null, navLng = null, navAddress = null;
-
-function openNavModal(lat, lng, address) {
-  navLat = lat; navLng = lng; navAddress = address;
-  const navChoices = document.getElementById('nav-choices');
-  navChoices.innerHTML = "";
-
-  // Erkennung von iOS
-  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-  if (iOS) {
-    navChoices.innerHTML += `<button onclick="startAppleMaps()" style="margin:10px 0; background:#007aff; color:#fff; border:none; border-radius:8px; padding:12px 20px; font-size:1em; cursor:pointer;">Apple Karten</button><br>`;
-    navChoices.innerHTML += `<button onclick="startGoogleMaps()" style="margin:10px 0; background:#36c3e7; color:#fff; border:none; border-radius:8px; padding:12px 20px; font-size:1em; cursor:pointer;">Google Maps</button><br>`;
-  } else {
-    navChoices.innerHTML += `<button onclick="startGoogleMaps()" style="margin:10px 0; background:#36c3e7; color:#fff; border:none; border-radius:8px; padding:12px 20px; font-size:1em; cursor:pointer;">Google Maps</button><br>`;
-  }
-
-  document.getElementById('nav-modal').style.display = 'flex';
-}
-
-function closeNavModal() {
-  document.getElementById('nav-modal').style.display = 'none';
-}
-
-function startAppleMaps() {
-  const url = `maps://?q=${navLat},${navLng}`;
-  window.open(url, '_blank');
-  closeNavModal();
-}
-
-function startGoogleMaps() {
-  const url = `https://www.google.com/maps/search/?api=1&query=${navLat},${navLng}`;
-  window.open(url, '_blank');
-  closeNavModal();
-}  
-</script>
-
-
-
-    
     <table>
         <thead>
             <tr>
@@ -108,14 +67,60 @@ function startGoogleMaps() {
 
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<!-- Aussteller-Daten -->
-<script src="exhibitors.js"></script>
 <script>
+// Navigation Modal
+let navLat = null, navLng = null, navAddress = null;
+function openNavModal(lat, lng, address) {
+  navLat = lat; navLng = lng; navAddress = address;
+  const navChoices = document.getElementById('nav-choices');
+  navChoices.innerHTML = "";
+
+  // Erkennung von iOS
+  const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+  if (iOS) {
+    navChoices.innerHTML += `<button onclick="startAppleMaps()" style="margin:10px 0; background:#007aff; color:#fff; border:none; border-radius:8px; padding:12px 20px; font-size:1em; cursor:pointer;">Apple Karten</button><br>`;
+    navChoices.innerHTML += `<button onclick="startGoogleMaps()" style="margin:10px 0; background:#36c3e7; color:#fff; border:none; border-radius:8px; padding:12px 20px; font-size:1em; cursor:pointer;">Google Maps</button><br>`;
+  } else {
+    navChoices.innerHTML += `<button onclick="startGoogleMaps()" style="margin:10px 0; background:#36c3e7; color:#fff; border:none; border-radius:8px; padding:12px 20px; font-size:1em; cursor:pointer;">Google Maps</button><br>`;
+  }
+
+  document.getElementById('nav-modal').style.display = 'flex';
+}
+function closeNavModal() {
+  document.getElementById('nav-modal').style.display = 'none';
+}
+function startAppleMaps() {
+  const url = `maps://?q=${navLat},${navLng}`;
+  window.open(url, '_blank');
+  closeNavModal();
+}
+function startGoogleMaps() {
+  const url = `https://www.google.com/maps/search/?api=1&query=${navLat},${navLng}`;
+  window.open(url, '_blank');
+  closeNavModal();
+}
+
+// Bookmark-Funktion
+function addBookmark() {
+  const title = document.title;
+  const url = window.location.href;
+  const isMac = navigator.platform.toUpperCase().includes('MAC');
+  const shortcut = isMac ? 'Cmd + D' : 'Strg + D';
+  alert(
+    `📌 Um diese Seite als Lesezeichen/Favorit zu speichern:\n\n` +
+    `• Drücke ${shortcut}\n` +
+    `• Oder klicke auf das ⭐Sternsymbol im Browser\n` +
+    `• Auf dem Handy: Teilen-Symbol nutzen und "Lesezeichen hinzufügen" auswählen\n`
+  );
+}
+
+// Dynamisches Laden und Initialisierung
 const exhibitorsScript = document.createElement('script');
-  exhibitorsScript.src = 'exhibitors.js?v=' + Date.now();
-  document.head.appendChild(exhibitorsScript);
-  exhibitorsScript.onload = function() {
-    // Hier den Rest des Codes ausführen, wenn exhibitors.js geladen ist!
+exhibitorsScript.src = 'exhibitors.js?v=' + Date.now();
+document.head.appendChild(exhibitorsScript);
+exhibitorsScript.onload = function() {
+    // Tabelle befüllen
     const tableBody = document.getElementById('exhibitor-table');
     exhibitors.forEach((ex, i) => {
         const row = document.createElement('tr');
@@ -125,45 +130,23 @@ const exhibitorsScript = document.createElement('script');
                          <td>${ex.description}</td>`;
         tableBody.appendChild(row);
     });
-      
     // Karte initialisieren
     const map = L.map('map').setView([49.73685,8.57275], 16);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
     }).addTo(map);
-
     exhibitors.forEach(ex => {
-    // Adresse als Button/Link im Popup
-    const popupHtml = `<strong>${ex.name}</strong><br>
-        <a href="#" onclick="openNavModal(${ex.lat},${ex.lng},'${ex.street} ${ex.number}'); return false;" style="color:#36c3e7; text-decoration:underline; font-weight:bold;">
-          ${ex.street} ${ex.number}
-        </a><br>
-        ${ex.description}`;
-    L.marker([ex.lat, ex.lng]).addTo(map)
-        .bindPopup(popupHtml);
-});
-  };
-    
-// Marker für alle Aussteller hinzufügen
-exhibitors.forEach(ex => {
-    L.marker([ex.lat, ex.lng]).addTo(map)
-        .bindPopup(`<strong>${ex.name}</strong><br>${ex.street} ${ex.number}<br>${ex.description}`);
-});
-
-// Bookmark-Funktion
-function addBookmark() {
-  const title = document.title;
-  const url = window.location.href;
-  const isMac = navigator.platform.toUpperCase().includes('MAC');
-  const shortcut = isMac ? 'Cmd + D' : 'Strg + D';
-
-  alert(
-    `📌 Um diese Seite als Lesezeichen zu speichern:\n\n` +
-    `• Drücke ${shortcut}\n` +
-    `• Oder klicke auf das ⭐Sternsymbol im Browser oder beim iPhone auf das Teilen-Symbol und dann "Lesezeichen hinzufügen"\n\n`
-  );
-}
+        // Adresse als anklickbarer Link mit Modal für Navigation!
+        const popupHtml = `<strong>${ex.name}</strong><br>
+            <a href="#" onclick="openNavModal(${ex.lat},${ex.lng},'${ex.street} ${ex.number}'); return false;" style="color:#36c3e7; text-decoration:underline; font-weight:bold;">
+              ${ex.street} ${ex.number}
+            </a><br>
+            ${ex.description}`;
+        L.marker([ex.lat, ex.lng]).addTo(map)
+            .bindPopup(popupHtml);
+    });
+};
 </script>
 </body>
 </html>
