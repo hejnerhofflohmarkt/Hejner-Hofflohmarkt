@@ -23,6 +23,7 @@
     <table>
         <thead>
             <tr>
+                <th>Nr.</th>
                 <th>Straße und Hausnummer</th>
                 <th>Name</th>
                 <th>Beschreibung</th>
@@ -39,11 +40,12 @@
 <!-- Aussteller-Daten -->
 <script src="exhibitors.js"></script>
 <script>
-// Tabelle befüllen
+// Tabelle befüllen mit fortlaufender Nummer
 const tableBody = document.getElementById('exhibitor-table');
-exhibitors.forEach(ex => {
+exhibitors.forEach((ex, i) => {
     const row = document.createElement('tr');
-    row.innerHTML = `<td>${ex.street} ${ex.number}</td>
+    row.innerHTML = `<td>${i + 1}</td>
+                     <td>${ex.street} ${ex.number}</td>
                      <td>${ex.name}</td>
                      <td>${ex.description}</td>`;
     tableBody.appendChild(row);
