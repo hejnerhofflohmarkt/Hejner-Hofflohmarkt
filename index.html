@@ -38,7 +38,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>Hejner Hofflohmarkt 2025</h1>
+    <h1>Hejner Hofflohmarkt 2025--</h1>
     <div class="bookmark-section">
         <div class="bookmark-hint">
             ⭐ Möchtest du diese Seite schnell wiederfinden?<br>
@@ -67,24 +67,34 @@
 <!-- Aussteller-Daten -->
 <script src="exhibitors.js"></script>
 <script>
-// Tabelle befüllen mit fortlaufender Nummer
-const tableBody = document.getElementById('exhibitor-table');
-exhibitors.forEach((ex, i) => {
-    const row = document.createElement('tr');
-    row.innerHTML = `<td>${i + 1}</td>
-                     <td>${ex.street} ${ex.number}</td>
-                     <td>${ex.name}</td>
-                     <td>${ex.description}</td>`;
-    tableBody.appendChild(row);
-});
+const exhibitorsScript = document.createElement('script');
+  exhibitorsScript.src = 'exhibitors.js?v=' + Date.now();
+  document.head.appendChild(exhibitorsScript);
+  exhibitorsScript.onload = function() {
+    // Hier den Rest des Codes ausführen, wenn exhibitors.js geladen ist!
+    const tableBody = document.getElementById('exhibitor-table');
+    exhibitors.forEach((ex, i) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${i + 1}</td>
+                         <td>${ex.street} ${ex.number}</td>
+                         <td>${ex.name}</td>
+                         <td>${ex.description}</td>`;
+        tableBody.appendChild(row);
+    });
+      
+    // Karte initialisieren
+    const map = L.map('map').setView([49.73685,8.57275], 16);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
 
-// Karte initialisieren
-const map = L.map('map').setView([49.73685,8.57275], 16); // Mittelpunkt und Zoom anpassen
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-}).addTo(map);
-
+    exhibitors.forEach(ex => {
+        L.marker([ex.lat, ex.lng]).addTo(map)
+            .bindPopup(`<strong>${ex.name}</strong><br>${ex.street} ${ex.number}<br>${ex.description}`);
+    });
+  };
+    
 // Marker für alle Aussteller hinzufügen
 exhibitors.forEach(ex => {
     L.marker([ex.lat, ex.lng]).addTo(map)
